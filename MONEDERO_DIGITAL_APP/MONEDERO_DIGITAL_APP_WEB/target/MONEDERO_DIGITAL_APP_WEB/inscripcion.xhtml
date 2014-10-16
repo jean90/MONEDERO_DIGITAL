@@ -1,0 +1,81 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns:ui="http://java.sun.com/jsf/facelets"
+        xmlns="http://www.w3.org/1999/xhtml"
+        xmlns:h="http://java.sun.com/jsf/html"
+        xmlns:f="http://java.sun.com/jsf/core" 
+        xmlns:p="http://primefaces.org/ui" 
+        xmlns:fn="http://java.sun.com/jsp/jslt/functions">
+    <f:view contentType="text/html">
+        <h:head>
+            <title>Facelet Title</title>
+        </h:head>
+            <h:body>
+                <h:form>
+                    <p:growl id="growl" sticky="true" showDetail="true"/>
+                    <p:wizard flowListener="#{inscripcionPersona.onFlowProcess}">
+                        <p:tab id="personal" title="Datos Personales">
+                            <p:panel header="Quién eres?">
+                                <p:messages />
+                                <h:panelGrid columns="2" columnClasses="label, value" >
+                                    <h:outputText value="Nombre:"/>
+                                    <p:inputText value="#{inscripcionPersona.persona.nombre}" required="true" label="Nombre" />
+
+                                    <h:outputText value="Apellido:"/>
+                                    <p:inputText value="#{inscripcionPersona.persona.apellido}" required="true" label="Apellido" />
+                                    
+                                    
+                                    <h:outputText value="Tipo de documento:"/>                                    
+                                    <h:selectOneMenu id="tipoDoc"  required="true" label="Tipo de documento">
+                                        <f:selectItem itemLabel="Seleccione" itemValue="0" noSelectionOption="true" /> 
+                                        <f:selectItem itemLabel="Cédula de ciudadanía" itemValue="1" /> 
+                                        <f:selectItem itemLabel="Cédula de extranjería" itemValue="2" /> 
+                                    </h:selectOneMenu>
+                                    
+                                    <h:outputText value="Num. documento" />
+                                    <p:inputText  required="true" label="NumDoc" validatorMessage="Sólo se aceptan valores numéricos" >
+                                        <f:validateRegex pattern="^[0-9]+$" />
+                                    </p:inputText>
+                                    
+                                    
+                                </h:panelGrid>
+                            </p:panel>
+                        </p:tab>
+                        <p:tab id="ubicacion" title="Contacto" >
+                            <p:panel header="Cómo te contactamos?">
+                                <p:messages />
+                                <h:panelGrid columns="2" columnClasses="label, value" >
+                                    
+                                    <h:outputText value="Teléfono fijo:"/>
+                                    <p:inputText value="#{inscripcionPersona.persona.numTelFijo}" required="true" label="Telefono" />
+                                    
+                                    <h:outputText value="Celular:"/>
+                                    <p:inputText value="#{inscripcionPersona.persona.numCelular}" required="true" label="Celular" />
+                                   
+                                </h:panelGrid>
+                            </p:panel>                            
+                        </p:tab>
+                        <p:tab id="confCuenta" title="Configuración de cuenta" >
+                            <p:panel header="Cómo quieres acceder al Monedero?">
+                                <p:messages />
+                                <h:panelGrid columns="2" columnClasses="label, value" >
+                                    
+                                    <h:outputText value="NickName"/>
+                                    <p:inputText value="" required="true" label="NickName" />
+                                    
+                                    <h:outputLabel for="pwd1" value="Password: "/>
+                                    <p:password autocomplete="false" id="pwd1" value="" match="pwd2" label="password1" required="true" />
+                                                
+                                    <h:outputLabel for="pwd2" value="Repeat password: "/>
+                                    <p:password autocomplete="false" id="pwd2" label="password2" required="true" />                               
+                                    
+                                </h:panelGrid>
+                                <p:commandButton value="Submit" actionListener="#{inscripcionPersona.save}" update="growl" process="@this"/>
+                            </p:panel>
+                            
+                        </p:tab>
+                    </p:wizard>   
+                </h:form>
+            </h:body>
+    </f:view>
+</ui:composition>

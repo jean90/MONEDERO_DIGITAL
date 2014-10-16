@@ -1,0 +1,62 @@
+<!DOCTYPE web-app PUBLIC    
+ "-//Sun Microsystems, Inc.//DTD Web Application 2.3//EN"
+ "http://java.sun.com/dtd/web-app_2_3.dtd" >
+
+<web-app>
+  <display-name>Archetype Created Web Application</display-name>
+  <context-param> 
+      <param-name>javax.faces.PROJECT_STAGE</param-name> 
+      <param-value>Development</param-value>       
+  </context-param> 
+ 
+  <context-param> 
+      <param-name>ficheroConfig</param-name> 
+      <param-value>/Init.properties</param-value>       
+  </context-param> 
+ 
+  <servlet> 
+      <servlet-name>Faces Servlet</servlet-name> 
+      <servlet-class>javax.faces.webapp.FacesServlet</servlet-class> 
+      <load-on-startup>1</load-on-startup>
+  </servlet> 
+  <servlet-mapping> 
+      <servlet-name>Faces Servlet</servlet-name> 
+      <url-pattern>/faces/*</url-pattern> 
+  </servlet-mapping> 
+  <session-config> 
+      <session-timeout> 30 </session-timeout> 
+  </session-config> 
+  <welcome-file-list> 
+      <welcome-file>faces/LogIn/LogIn.xhtml</welcome-file> 
+  </welcome-file-list>
+  
+  <security-constraint>
+    <web-resource-collection>
+        <web-resource-name>AllAdminOperations</web-resource-name>
+        <url-pattern>/faces/admin/*</url-pattern>        
+    </web-resource-collection>
+    <auth-constraint>
+        <role-name>Admin</role-name>
+    </auth-constraint>
+</security-constraint>
+  
+  <login-config>
+     <auth-method>FORM</auth-method>
+     <realm-name>LdapMonedero</realm-name>
+     <form-login-config>
+         <form-login-page>/faces/LogIn/LogIn.xhtml</form-login-page>
+         <form-error-page>/faces/LogIn/ErrorLogIn.xhtml</form-error-page>
+     </form-login-config>
+  </login-config>
+
+
+    <security-role>
+      <description>Basic User</description>
+      <role-name>Basic</role-name>
+     </security-role>
+     <security-role>
+       <description>AdminUser</description>
+       <role-name>Admin</role-name>
+     </security-role>
+
+</web-app>
