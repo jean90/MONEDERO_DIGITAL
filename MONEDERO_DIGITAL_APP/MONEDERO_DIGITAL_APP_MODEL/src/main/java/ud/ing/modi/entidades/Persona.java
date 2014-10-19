@@ -11,18 +11,24 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
+import static javax.persistence.GenerationType.SEQUENCE;
+
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 
 @Entity
 @Table(name="PERSONA")
 public class Persona implements Serializable {
     @Id
-    @GeneratedValue
+    @SequenceGenerator( name = "PERSONA_SEQ", sequenceName = "PERSONA_SEQ", allocationSize = 1, initialValue = 1 )
+    @GeneratedValue(strategy=SEQUENCE, generator ="PERSONA_SEQ")
     @Column(name="ID_PERSONA")    
     private int idPersona;
+    @Column(name="NUM_DOCUMENTO")
+    private String numDocumento;
     @Column(name="NOMBRE")
     private String nombre;
     @Column(name="APELLIDO")
@@ -31,12 +37,15 @@ public class Persona implements Serializable {
     private String numTelFijo;
     @Column(name="NUM_CELULAR")
     private String numCelular;
-    @ManyToOne (fetch = FetchType.EAGER)
-    @JoinColumn (name="COD_TIPODOC")
-    private TipoDocumento tipoDocumento;
+    //@ManyToOne (fetch = FetchType.EAGER)
+    //@JoinColumn (name="COD_TIPODOC")
+    @Column(name="COD_TIPODOC")
+    private int tipoDocumento;
+    //private TipoDocumento tipoDocumento;
 
     public Persona() {
-        tipoDocumento=new TipoDocumento();
+        //tipoDocumento=new TipoDocumento();
+        tipoDocumento=0;
     }
 
     public int getIdPersona() {
@@ -46,6 +55,16 @@ public class Persona implements Serializable {
     public void setIdPersona(int idPersona) {
         this.idPersona = idPersona;
     }
+
+    public String getNumDocumento() {
+        return numDocumento;
+    }
+
+    public void setNumDocumento(String numDocumento) {
+        this.numDocumento = numDocumento;
+    }
+
+
 
     public String getNombre() {
         return nombre;
@@ -79,12 +98,19 @@ public class Persona implements Serializable {
         this.numCelular = numCelular;
     }
 
-    public TipoDocumento getTipoDocumento() {
+    /*public TipoDocumento getTipoDocumento() {
+    return tipoDocumento;
+    }
+    public void setTipoDocumento(TipoDocumento tipoDocumento) {
+    this.tipoDocumento = tipoDocumento;
+    }*/
+    public int getTipoDocumento() {
         return tipoDocumento;
     }
 
-    public void setTipoDocumento(TipoDocumento tipoDocumento) {
+    public void setTipoDocumento(int tipoDocumento) {
         this.tipoDocumento = tipoDocumento;
     }
+    
     
 }

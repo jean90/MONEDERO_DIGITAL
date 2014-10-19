@@ -3,7 +3,7 @@
   <persistence-unit name="DB_MONEDERO" transaction-type="RESOURCE_LOCAL">
     <provider>org.hibernate.ejb.HibernatePersistence</provider>
     <properties>
-      <property name="javax.persistence.jdbc.url" value="jdbc:oracle:thin:@localhost:1521:XE"/>
+      <property name="javax.persistence.jdbc.url" value="jdbc:oracle:thin:@190.146.42.16:1521:XE"/>
       <property name="javax.persistence.jdbc.password" value="app123456"/>
       <property name="javax.persistence.jdbc.driver" value="oracle.jdbc.OracleDriver"/>
       <property name="javax.persistence.jdbc.user" value="USER_MONEDERO"/>
