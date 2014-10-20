@@ -17,7 +17,6 @@
                         <f:facet name="header">
                         Login
                         </f:facet>
-
                         
                         <h:outputLabel  value="Username: "/>
                         <p:inputText value="#{monederoLogIn.userName}" required="true" />
@@ -26,13 +25,14 @@
                         <p:password  value="#{monederoLogIn.password}" required="true" />
 
                         <f:facet name="footer">
-                        <p:commandButton value="Login" type="submit" action="#{monederoLogIn.pruebaPendientes()}"/>
-                        <h:link value="click For Admin Page - " outcome="/admin/adminOnly" rendered="#{request.isUserInRole('Admin')}" />   
+                        <p:commandButton value="Login" type="submit" action="#{monederoLogIn.login()}"/>                       
                         <h:link value="Registrarse" outcome="/inscripcion" />
                         <h:link value="otra" outcome="/otra" />
                         </f:facet>
                     </p:panelGrid>
                 </h:form>
+                
             </h:body>
     </f:view>
 </html>
+
