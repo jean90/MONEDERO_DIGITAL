@@ -23,23 +23,23 @@ import javax.persistence.Table;
 public class TipoDocumento implements Serializable{
     @Id
     @Column (name="COD_TIPODOC")
-    private String codigotipoDocumento;
+    private int codigotipoDocumento;
     @Column (name="DES_TIPODOC")
     private String desDocumento;
 
     public TipoDocumento() {
     }
 
-    public TipoDocumento(String codigotipoDocumento, String desDocumento) {
+    public TipoDocumento(int codigotipoDocumento, String desDocumento) {
         this.codigotipoDocumento = codigotipoDocumento;
         this.desDocumento = desDocumento;
     }    
     
-    public String getCodigotipoDocumento() {
+    public int getCodigotipoDocumento() {
         return codigotipoDocumento;
     }
 
-    public void setCodigotipoDocumento(String codigotipoDocumento) {
+    public void setCodigotipoDocumento(int codigotipoDocumento) {
         this.codigotipoDocumento = codigotipoDocumento;
     }
 
