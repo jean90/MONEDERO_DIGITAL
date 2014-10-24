@@ -7,7 +7,9 @@
 package ud.ing.modi.controlador.inscripcion;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.faces.application.FacesMessage;
@@ -20,6 +22,7 @@ import ud.ing.modi.entidades.PendienteRegis;
 import ud.ing.modi.entidades.Persona;
 import ud.ing.modi.entidades.TipoDocumento;
 import ud.ing.modi.ldap.AccesoLDAP;
+import ud.ing.modi.mapper.DocumentoMapper;
 import ud.ing.modi.mapper.PendientesMapper;
 import ud.ing.modi.mapper.PersonMapper;
 
@@ -36,6 +39,11 @@ public class InscripcionPersona implements Serializable {
     private PendienteRegis pendiente=new PendienteRegis();
     private String password;
     private String nick;
+
+    public InscripcionPersona() {
+        this.traerDocs();        
+    }
+     
     
     public TipoDocumento getTipoDocumento() {
         return tipoDocumento;
@@ -111,6 +119,20 @@ public class InscripcionPersona implements Serializable {
     public void registroLdap(){
         AccesoLDAP ldap= new AccesoLDAP();
         ldap.InsertarUsuario(persona, this.nick, this.password);
+    }
+    
+    public void traerDocs(){
+        DocumentoMapper mapDoc=new DocumentoMapper();
+        List<TipoDocumento> tipoDoc=mapDoc.obtenerDocs();
+       // tipoDoc=mapDoc.obtenerDocs();
+        //TipoDocumento docs[]=new TipoDocumento[tipoDoc.size()];
+        //tipoDoc.toArray(docs);
+        for (int i = 0; i < tipoDoc.size(); i++) {
+            System.out.println("LONGITUD: **** "+tipoDoc.size());
+            TipoDocumento doc=tipoDoc.get(i);
+            System.out.println("DOC: **** "+tipoDoc.get(i));
+       //     System.out.println("DOCUMENTO "+i+1+"--"+((TipoDocumento)tipoDoc.get(i)).getDesDocumento());
+        }
     }
     
 }
