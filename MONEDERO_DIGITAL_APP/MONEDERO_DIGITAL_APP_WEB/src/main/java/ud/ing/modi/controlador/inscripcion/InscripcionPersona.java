@@ -124,7 +124,7 @@ public class InscripcionPersona implements Serializable {
     public void traerDocs(){
         DocumentoMapper mapDoc=new DocumentoMapper();
         List<TipoDocumento> tipoDoc=mapDoc.obtenerDocs();
-       // tipoDoc=mapDoc.obtenerDocs();
+       // tipoDoc=mapDoc.obtenerDocs(); 
         //TipoDocumento docs[]=new TipoDocumento[tipoDoc.size()];
         //tipoDoc.toArray(docs);
         for (int i = 0; i < tipoDoc.size(); i++) {
