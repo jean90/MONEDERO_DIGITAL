@@ -7,6 +7,7 @@
 package ud.ing.modi.mapper;
 
 import java.util.ArrayList;
+import java.util.List;
 import org.hibernate.HibernateException;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
@@ -38,11 +39,13 @@ public class DocumentoMapper {
         tx = sesion.beginTransaction();
     }
     
-    public ArrayList<TipoDocumento> obtenerDocs() throws HibernateException {
-        ArrayList<TipoDocumento> tipoDoc = new ArrayList<TipoDocumento>();
+    public List<TipoDocumento> obtenerDocs() throws HibernateException {
+        List<TipoDocumento> tipoDoc = null;
+        String query="FROM TIPO_DOCUMENTO";
         try {
             iniciaOperacion();
-            tipoDoc.add((TipoDocumento) sesion.get(TipoDocumento.class, "*"));
+         //   System.out.println("QUERY: "+sesion.createSQLQuery(query).getQueryString());
+            tipoDoc= sesion.createSQLQuery(query).list();
         } finally {
             sesion.close();
         }
