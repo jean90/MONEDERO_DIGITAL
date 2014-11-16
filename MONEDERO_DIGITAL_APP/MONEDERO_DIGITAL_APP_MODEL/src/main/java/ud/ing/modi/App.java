@@ -28,7 +28,7 @@ public class App
         PersonMapper aMapper=new PersonMapper();
         a=aMapper.obtenerUsuario("00001");
         System.out.println(a.getIdPersona());
-//        System.out.println(a.getTipoDocumento().getDesDocumento());
+
         
     }
    
