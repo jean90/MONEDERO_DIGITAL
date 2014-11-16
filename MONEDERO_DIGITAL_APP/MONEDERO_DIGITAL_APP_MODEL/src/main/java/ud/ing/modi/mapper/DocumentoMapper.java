@@ -9,6 +9,7 @@ package ud.ing.modi.mapper;
 import java.util.ArrayList;
 import java.util.List;
 import org.hibernate.HibernateException;
+import org.hibernate.SQLQuery;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
@@ -41,11 +42,14 @@ public class DocumentoMapper {
     
     public List<TipoDocumento> obtenerDocs() throws HibernateException {
         List<TipoDocumento> tipoDoc = null;
-        String query="FROM TIPO_DOCUMENTO";
+        String query="SELECT * FROM TIPO_DOCUMENTO";
+        System.out.println("QUERY: "+query);
         try {
             iniciaOperacion();
+            SQLQuery sqlquery=sesion.createSQLQuery(query);
          //   System.out.println("QUERY: "+sesion.createSQLQuery(query).getQueryString());
-            tipoDoc= sesion.createSQLQuery(query).list();
+            sqlquery.addEntity(TipoDocumento.class);
+            tipoDoc= sqlquery.list();
         } finally {
             sesion.close();
         }

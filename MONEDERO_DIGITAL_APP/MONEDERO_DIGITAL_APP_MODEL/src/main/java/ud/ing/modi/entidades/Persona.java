@@ -37,15 +37,19 @@ public class Persona implements Serializable {
     private String numTelFijo;
     @Column(name="NUM_CELULAR")
     private String numCelular;
-    //@ManyToOne (fetch = FetchType.EAGER)
-    //@JoinColumn (name="COD_TIPODOC")
-    @Column(name="COD_TIPODOC")
-    private int tipoDocumento;
-    //private TipoDocumento tipoDocumento;
+    @Column(name="DIRECCION")
+    private String direccion;
+    @Column(name="EMAIL")
+    private String email;
+    //@Column(name="COD_TIPODOC")
+    //private int tipoDocumento;
+    @ManyToOne (fetch = FetchType.EAGER)
+    @JoinColumn (name="COD_TIPODOC")
+    private TipoDocumento tipoDocumento;
 
     public Persona() {
-        //tipoDocumento=new TipoDocumento();
-        tipoDocumento=0;
+        tipoDocumento=new TipoDocumento();
+        //tipoDocumento=0;
     }
 
     public int getIdPersona() {
@@ -98,19 +102,36 @@ public class Persona implements Serializable {
         this.numCelular = numCelular;
     }
 
-    /*public TipoDocumento getTipoDocumento() {
+    public TipoDocumento getTipoDocumento() {
     return tipoDocumento;
     }
     public void setTipoDocumento(TipoDocumento tipoDocumento) {
     this.tipoDocumento = tipoDocumento;
-    }*/
-    public int getTipoDocumento() {
+    }
+    /*public int getTipoDocumento() {
         return tipoDocumento;
     }
 
     public void setTipoDocumento(int tipoDocumento) {
         this.tipoDocumento = tipoDocumento;
+    }*/
+
+    public String getDireccion() {
+        return direccion;
     }
+
+    public void setDireccion(String direccion) {
+        this.direccion = direccion;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
+    
     
     
 }
