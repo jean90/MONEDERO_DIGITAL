@@ -7,6 +7,8 @@ package ud.ing.modi.controlador.login;
  */
 
 import java.util.Date;
+import java.util.HashMap;
+import java.util.Hashtable;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.faces.application.FacesMessage;
@@ -16,10 +18,11 @@ import javax.faces.context.ExternalContext;
 import javax.faces.context.FacesContext;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
+
+import ud.ing.modi.email.EmailActivacionCuenta;
 import ud.ing.modi.entidades.PendienteRegis;
 import ud.ing.modi.entidades.Persona;
 import ud.ing.modi.ldap.AccesoLDAP;
-import ud.ing.modi.ldap.ConexionLdap;
 import ud.ing.modi.mapper.PendientesMapper;
 
 /**
@@ -54,7 +57,7 @@ public class MonederoLogIn {
         this.password = password;
     }
     
-    public String login() {
+    public String login() throws ServletException {
         String rol="error";
         FacesContext contexto= FacesContext.getCurrentInstance();
         ExternalContext contextoExterno = contexto.getExternalContext();
@@ -65,6 +68,8 @@ public class MonederoLogIn {
                 rol="Admin";
             }else if(request.isUserInRole("Monedero")){
                 rol="Monedero";
+            }else if(request.isUserInRole("")||rol.equals("error")){
+                request.logout();
             }
         }catch (ServletException ex) {            
             System.out.println("ERROR DE LOGGEO "); 
@@ -77,7 +82,9 @@ public class MonederoLogIn {
                 FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Usuario No Existe!", "Verifique sus datos"));
             }            
             Logger.getLogger(MonederoLogIn.class.getName()).log(Level.WARNING, null, ex); 
-        }        
+            request.logout();
+        }     
+        System.out.println("ROL:---"+rol);
         return rol;
     }
     
@@ -103,5 +110,26 @@ public class MonederoLogIn {
         } catch (Exception ex) {
             Logger.getLogger(MonederoLogIn.class.getName()).log(Level.SEVERE, null, ex);
         }
+    }
+
+    public String logOut() throws ServletException{
+        FacesContext contexto= FacesContext.getCurrentInstance();
+        ExternalContext contextoExterno = contexto.getExternalContext();
+        HttpServletRequest request = (HttpServletRequest) contextoExterno.getRequest();
+        request.logout();
+        return "logOut";
+    }
+    
+    public void generarEmail(){
+        HashMap datos=new HashMap();
+        datos.put("nombre", "Alejandro");
+        datos.put("apellido", "Silva");
+        datos.put("url", "http://localhost:8080/MONEDERO_DIGITAL_APP_WEB/activar?id=123456");
+        EmailActivacionCuenta email= new EmailActivacionCuenta("nxtreo@gmail.com");
+        email.ensamblarMensaje(datos);
+        email.enviarMensaje();
+        
+        //String mensaje = ConstructorEmail.construirMensaje(datos,template);       
+       
     }
 }

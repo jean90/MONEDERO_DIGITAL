@@ -8,63 +8,50 @@ package ud.ing.modi.email;
 
 import java.io.Serializable;
 import java.util.Properties;
-import javax.faces.bean.ManagedBean;
-import javax.faces.bean.RequestScoped;
 import javax.mail.*;
 import javax.mail.internet.*;
-import javax.swing.JOptionPane;
+import ud.ing.modi.config.Config;
 
-@ManagedBean(name="emailEnvio")
-@RequestScoped
+
 /**
  *
  * @author Lufe
  */
 public class EmailEnvio implements Serializable{
 
-    static String destinatario="monedero.digital@gmail.com";
-    String host="smtp.gmail.com";//"190.146.42.16";
-    String port="587";//"25";
-    Properties props;
-    private String correo;
+
     
-    public EmailEnvio() {
-        props=new Properties();
-        props.put("mail.smtp.auth","true");
-        props.put("mail.smtp.starttls.enable", "true");
-        props.put("mail.smtp.host", this.host);
-        props.put("mail.smtp.port", this.port);
+    public EmailEnvio() {        
     }
     
-    public void enviarMail(){
-        System.out.println("Método! yuhuuuu "+this.correo);
-        Session sesion=Session.getInstance(props, new javax.mail.Authenticator(){
-            protected PasswordAuthentication getPasswordAuthentication(){
-           return new PasswordAuthentication("monedero.digital@gmail.com","lufejean"); 
+    public static void enviarMail(String destinatario, String mensaje,String asunto){
+        System.out.println("Método! yuhuuuu "+destinatario);
+        Session sesion=Session.getInstance(inicializarPropiedades(), new javax.mail.Authenticator(){
+        protected PasswordAuthentication getPasswordAuthentication(){
+           return new PasswordAuthentication(Config.getConfig().getPropiedad("EMAIL_CUENTA"),Config.getConfig().getPropiedad("EMAIL_PASSWORD")); 
            }
         });
         
         try{
             Message mes=new MimeMessage(sesion);
-            mes.setFrom(new InternetAddress(destinatario));
-                mes.setRecipients(Message.RecipientType.TO, InternetAddress.parse(this.correo));
-                mes.setSubject("Asunto 1");
-                mes.setText("Cuerpo del mensaje");
-                
-                Transport.send(mes);
-                JOptionPane.showMessageDialog(null, "Su mensaje ha sido enviado! :)");
+            mes.setFrom(new InternetAddress(Config.getConfig().getPropiedad("EMAIL_CUENTA")));
+            mes.setRecipients(Message.RecipientType.TO, InternetAddress.parse(destinatario));
+            mes.setSubject(asunto);
+            mes.setText(mensaje);                
+            Transport.send(mes);                
         }catch(MessagingException e){
             System.out.println("Error "+e);
         }
     }
-
-    public String getCorreo() {
-        return correo;
-    }
-
-    public void setCorreo(String correo) {
-        this.correo = correo;
-    }
     
+    private static Properties inicializarPropiedades(){
+        Properties props;
+        props=new Properties();
+        props.put("mail.smtp.auth","true");
+        props.put("mail.smtp.starttls.enable", "true");
+        props.put("mail.smtp.host", Config.getConfig().getPropiedad("EMAIL_HOST"));
+        props.put("mail.smtp.port", Config.getConfig().getPropiedad("EMAIL_PORT"));
+        return props;
+    }
     
 }

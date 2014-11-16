@@ -6,13 +6,9 @@
 
 package ud.ing.modi.email;
 
-import java.io.*;
 import java.io.StringWriter;
 import java.util.HashMap;
 import java.util.Properties;
-import java.util.Vector;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import org.apache.velocity.Template;
 import org.apache.velocity.VelocityContext;
 import org.apache.velocity.app.VelocityEngine;
@@ -23,19 +19,11 @@ import ud.ing.modi.config.Config;
  * @author Administrador
  */
 public class ConstructorEmail {
-    private String mensaje;
-    private HashMap datos;
-    private String template;
 
     public ConstructorEmail() {
     }
-    
-    public ConstructorEmail(HashMap datos, String template) {        
-        this.datos = datos;
-        this.template = template;
-    }
-    
-    public String construirMensaje(){       
+        
+    public static String construirMensaje(HashMap datos, String template){       
         String mensaje="";
         VelocityEngine ve= new VelocityEngine();
         Properties p = new Properties();  
@@ -47,10 +35,6 @@ public class ConstructorEmail {
         ve.init(p);          
         
         VelocityContext context = new VelocityContext(datos);
-        
-        //context.put("datos", datos);
-        //context.put("url", "www.gmaijaskljfn.com");
-
         Template t = ve.getTemplate(template);
         
         StringWriter writer = new StringWriter();
@@ -63,4 +47,5 @@ public class ConstructorEmail {
         System.out.println(mensaje);
         return mensaje;
     }
+
 }

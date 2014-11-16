@@ -43,7 +43,7 @@ public class ControlPersona implements Serializable{
         PersonMapper aMapper=new PersonMapper();
         this.persona=aMapper.obtenerUsuario("00001");
         this.nombre=persona.getNombre();
-        this.documento=persona.getTipoDocumento().getDesDocumento();
+        //this.documento=persona.getTipoDocumento().getDesDocumento();
     }
     
     public Persona getPersona() {
