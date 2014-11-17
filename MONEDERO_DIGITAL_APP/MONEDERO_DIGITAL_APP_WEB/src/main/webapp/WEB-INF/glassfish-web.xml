@@ -5,15 +5,14 @@
   <jsp-config>
     <property name="keepgenerated" value="true">
       <description>Keep a copy of the generated servlet class' java code.</description>
-    </property>    
+    </property>
   </jsp-config>
   <security-role-mapping>
     <role-name>Admin</role-name>
     <group-name>Admin</group-name>
   </security-role-mapping>
   <security-role-mapping>
-    <role-name>Basic</role-name>
-    <group-name>Basic</group-name>
+    <role-name>Monedero</role-name>
+    <group-name>Monedero</group-name>
   </security-role-mapping>
-  
 </glassfish-web-app>

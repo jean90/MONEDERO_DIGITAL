@@ -11,37 +11,36 @@ import com.novell.ldap.LDAPException;
 import java.io.UnsupportedEncodingException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import ud.ing.modi.config.Config;
 
 /**
  *
  * @author Administrador
  */
 public class ConexionLdap {
-    private int ldapPort;
-     private int ldapVersion;
+     private int ldapPort;    
      private LDAPConnection lc;
-     private String login;
-     private String ldapHost;
+	 private String ldapHost;
 
     public ConexionLdap() {
-        this.ldapPort=10389;
-        this.ldapVersion = LDAPConnection.LDAP_V3;
-        this.ldapHost="190.146.42.16";
+        this.ldapHost=Config.getConfig().getPropiedad("LDAP_HOST");
+        this.ldapPort=Integer.parseInt(Config.getConfig().getPropiedad("LDAP_PORT"));
+       
     }
      
       
      public LDAPConnection ConexionManager(String strManager, String strPassword) {
-          this.login="uid="+strManager+",ou=system"; 
+          String login="uid="+strManager+",ou=system"; 
          //login = "cn=" + strManager + ",o=utpl,c=ec";
           System.out.println("" + login);          
           System.out.println("puerto: " + ldapPort);          
-          System.out.println("Vesion: " + ldapVersion);
+          System.out.println("Vesion: " + LDAPConnection.LDAP_V3);
           System.out.println("HOST: " + ldapHost);
           try {
                lc = new LDAPConnection();
                lc.connect(ldapHost, ldapPort);
                System.out.println("====Conectado al Servidor LDAP====");
-               lc.bind(ldapVersion, login, strPassword.getBytes("UTF8"));
+               lc.bind(LDAPConnection.LDAP_V3, login, strPassword.getBytes("UTF8"));
                System.out.println("Autenticado en el servidor....");
           } catch (UnsupportedEncodingException ex) {
                Logger.getLogger(ConexionLdap.class.getName()).log(Level.SEVERE,null, ex);
@@ -59,18 +58,18 @@ public class ConexionLdap {
      */
  
      public LDAPConnection ConexionUser(String strUser, String strPassword) {
-          login = "uid=" + strUser + ",ou=People,o=utpl,c=ec";
+          String login = "uid=" + strUser + ",ou=People,o=utpl,c=ec";
           System.out.println("" + login);
           ldapPort = LDAPConnection.DEFAULT_PORT;
           System.out.println("puerto: " + ldapPort);
-          ldapVersion = LDAPConnection.LDAP_V3;
-          System.out.println("Vesion: " + ldapVersion);
+         
+          System.out.println("Vesion: " + LDAPConnection.LDAP_V3);
           System.out.println("HOST: " + ldapHost);
           try {
                lc = new LDAPConnection();
                lc.connect(ldapHost, ldapPort);
                System.out.println("====Conectado al Servidor LDAP====");
-               lc.bind(ldapVersion, login, strPassword.getBytes("UTF8"));
+               lc.bind(LDAPConnection.LDAP_V3, login, strPassword.getBytes("UTF8"));
           } catch (UnsupportedEncodingException ex) {
                Logger.getLogger(ConexionLdap.class.getName()).log(Level.SEVERE,null, ex);
           } catch (LDAPException ex) {
@@ -80,8 +79,8 @@ public class ConexionLdap {
      }
  
  	public void abrirConexionLdap() {
-        String user = "admin";
-        String passWord = "123456";
+        String user=Config.getConfig().getPropiedad("LDAP_USER");
+        String passWord=Config.getConfig().getPropiedad("LDAP_USER_PASSWORD");
         String login = "uid=" + user + ",ou=system";
         try {
             this.lc = new LDAPConnection();
