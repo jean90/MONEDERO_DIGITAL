@@ -12,6 +12,11 @@
             <to-view-id>/admin/adminOnly.xhtml</to-view-id>
         </navigation-case>
         <navigation-case>
+            <from-action>#{monederoLogIn.login()}</from-action>
+            <from-outcome>Monedero</from-outcome>
+            <to-view-id>/monedero/monederoOnly.xhtml</to-view-id>
+        </navigation-case>
+        <navigation-case>
             <from-outcome>error</from-outcome>
             <to-view-id>/LogIn/LogIn.xhtml</to-view-id>
         </navigation-case>

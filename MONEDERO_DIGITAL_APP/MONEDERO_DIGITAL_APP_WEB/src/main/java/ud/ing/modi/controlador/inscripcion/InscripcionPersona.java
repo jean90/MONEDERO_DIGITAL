@@ -15,7 +15,9 @@ import java.util.logging.Logger;
 import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
+import javax.faces.component.UIComponent;
 import javax.faces.context.FacesContext;
+import javax.faces.validator.ValidatorException;
 import org.primefaces.event.FlowEvent;
 import ud.ing.modi.controlador.ControlPersona;
 import ud.ing.modi.entidades.PendienteRegis;
@@ -35,7 +37,7 @@ import ud.ing.modi.mapper.PersonMapper;
 public class InscripcionPersona implements Serializable {
 
     private Persona persona = new Persona();
-    private TipoDocumento tipoDocumento = new TipoDocumento(); 
+    private List<TipoDocumento> documentos = new ArrayList<TipoDocumento>(); 
     private PendienteRegis pendiente=new PendienteRegis();
     private String password;
     private String nick;
@@ -45,12 +47,12 @@ public class InscripcionPersona implements Serializable {
     }
      
     
-    public TipoDocumento getTipoDocumento() {
-        return tipoDocumento;
+    public List<TipoDocumento> getDocumentos() {
+        return documentos;
     }
     
-    public void setTipoDocumento(TipoDocumento tipoDocumento) {
-        this.tipoDocumento = tipoDocumento;
+    public void setDocumentos(List<TipoDocumento> documentos) {
+        this.documentos = documentos;
     }
     
     public Persona getPersona() {
@@ -88,8 +90,20 @@ public class InscripcionPersona implements Serializable {
     
     
     public String onFlowProcess(FlowEvent event) {
-        System.out.println("Evento: " + event.getNewStep());
-        return event.getNewStep();
+        String evento=event.getNewStep();
+        System.out.println("Evento: " + evento);
+        if (evento.equals("confirma")) {
+            this.asignarDoc();
+        }
+        return evento;
+    }
+    
+    public void valida(FacesContext arg0, UIComponent arg1, Object arg2) throws ValidatorException {
+        AccesoLDAP ldap=new AccesoLDAP();
+        System.out.println("Buscando usuario "+arg2.toString()+" en el ldap");
+        if (ldap.buscarUsuario((String)arg2)) {
+         throw new ValidatorException(new FacesMessage("Nickname no disponible"));
+      }
     }
     
     public void save() {
@@ -116,22 +130,32 @@ public class InscripcionPersona implements Serializable {
         
     }
     
-    public void registroLdap(){
+    public void registroLdap() throws Exception{
         AccesoLDAP ldap= new AccesoLDAP();
         ldap.InsertarUsuario(persona, this.nick, this.password);
     }
     
     public void traerDocs(){
         DocumentoMapper mapDoc=new DocumentoMapper();
-        List<TipoDocumento> tipoDoc=mapDoc.obtenerDocs();
+        this.documentos=mapDoc.obtenerDocs();
+        /*List<TipoDocumento> tipoDoc=mapDoc.obtenerDocs();
        // tipoDoc=mapDoc.obtenerDocs(); 
         //TipoDocumento docs[]=new TipoDocumento[tipoDoc.size()];
         //tipoDoc.toArray(docs);
         for (int i = 0; i < tipoDoc.size(); i++) {
-            System.out.println("LONGITUD: **** "+tipoDoc.size());
+            //System.out.println("LONGITUD: **** "+tipoDoc.size());
             TipoDocumento doc=tipoDoc.get(i);
-            System.out.println("DOC: **** "+tipoDoc.get(i));
-       //     System.out.println("DOCUMENTO "+i+1+"--"+((TipoDocumento)tipoDoc.get(i)).getDesDocumento());
+            //System.out.println("DOC: **** "+tipoDoc.get(i));
+            //System.out.println("DOCUMENTO "+i+1+"--"+((TipoDocumento)tipoDoc.get(i)).getDesDocumento());
+        }*/
+    }
+    
+    public void asignarDoc(){
+        for (int i = 0; i < this.documentos.size(); i++) {
+            if (this.documentos.get(i).getCodigotipoDocumento()==this.persona.getTipoDocumento().getCodigotipoDocumento()) {
+                //this.persona.getTipoDocumento().setDesDocumento(this.documentos.get(i).getDesDocumento());
+                this.persona.setTipoDocumento(this.documentos.get(i));
+            }
         }
     }
     

@@ -25,23 +25,25 @@ import ud.ing.modi.entidades.Persona;
  */
 public class AccesoLDAP {
 
-    private LDAPConnection conLdap;
     private final String baseBusqueda="ou=Users,dc=monederodigital,dc=com,dc=co";
 
     public AccesoLDAP() {
-        conLdap=new LDAPConnection();
+        
     }
     
-    public void InsertarUsuario(Persona persona, String uid, String password){
+    public void InsertarUsuario(Persona persona, String uid, String password) throws Exception{
         try{
+            String grupo="Monedero";//MODIFICAR ESTO*********
             LDAPEntry usuarioLdap = cargarDatos(persona,uid,password);
             ConexionLdap conn=new ConexionLdap();
-            conn.ConexionManager("admin", "123456");
+            conn.abrirConexionLdap();
             conn.getLc().add(usuarioLdap);
-            conn.CerrarConLDAP(conn.getLc());
+            cargarMemberUid(grupo,uid,conn);
+            conn.cerrarConexionLdap();
         }catch(LDAPException e){
             System.out.println("fallo al insertar");
             e.printStackTrace();
+            throw e;
         }
     }
     private LDAPEntry cargarDatos(Persona persona, String uid, String password){
@@ -59,16 +61,30 @@ public class AccesoLDAP {
         return entrada;
     }
     
+    private void cargarMemberUid(String grupo, String uid, ConexionLdap conn) throws LDAPException{
+        //LDAPAttributeSet setAtr = new LDAPAttributeSet();
+        //setAtr.add(new LDAPAttribute("memberUid",uid));
+        String dn="cn="+grupo+",ou=Group,dc=monederodigital,dc=com,dc=co";
+        LDAPModification entrada=new LDAPModification(LDAPModification.ADD , new LDAPAttribute("memberUid",uid));
+        conn.getLc().modify(dn, entrada);
+    }
     
-    public void buscarUsuario(String usuario){
-        LDAPSearchResults resultado;        
+    public boolean buscarUsuario(String usuario){
+        LDAPSearchResults resultado=null;        
         int salida = LDAPConnection.SCOPE_SUB;
         String filtro="(uid="+usuario+")";
         try{
            ConexionLdap conn=new ConexionLdap();
-           conLdap=conn.ConexionManager("admin", "123456");
-           resultado = conLdap.search(this.baseBusqueda, salida, filtro, null, false);
-           while(resultado.hasMore()){
+           conn.abrirConexionLdap();
+           resultado = conn.getLc().search(this.baseBusqueda, salida, filtro, null, false);
+           System.out.println("RTADO **"+resultado.hasMore());
+           if(resultado.getCount()>0){
+               return true;
+           }
+           conn.cerrarConexionLdap();
+           
+           //Aquí se pintan los atributos del resultado
+          /* while(resultado.hasMore()){
                LDAPEntry entrada=null;
                try{
                    entrada=resultado.next();
@@ -89,11 +105,12 @@ public class AccesoLDAP {
                        }
                    }
                }
-           }
-           conn.CerrarConLDAP(conn.getLc());
+           }*/
         }catch(LDAPException ex){
             Logger.getLogger(getClass().getName()).log(Level.SEVERE, null);
+            System.out.println("ERROR ACÁAAAAA"+ex.getMessage());
         }
+               return false;
     }
     
     public boolean usuarioExiste(String usuario){
@@ -102,17 +119,19 @@ public class AccesoLDAP {
         String basebusqueda  = "ou=Users,dc=monederodigital,dc=com,dc=co";
         int salida = LDAPConnection.SCOPE_SUB;
         String filtro="(uid="+usuario+")";
+        System.out.println("USUARIO AL BUSCAR:"+filtro);
         try{
            ConexionLdap conn=new ConexionLdap();
-           conLdap=conn.ConexionManager("admin", "123456");
-           resultado = conLdap.search(basebusqueda, salida, filtro, null, false);
+           conn.abrirConexionLdap();
+           resultado = conn.getLc().search(basebusqueda, salida, filtro, null, false);
            if(resultado.getCount()>0){
                existeUsuario = true;
            }           
-           conn.CerrarConLDAP(conn.getLc());
+           conn.cerrarConexionLdap();
         }catch(LDAPException ex){
             Logger.getLogger(getClass().getName()).log(Level.SEVERE, null);
         }
+        System.out.println("USU EXISTE: "+existeUsuario);
         return existeUsuario;                
     }
     public boolean validarPassword(String usuario, String password){
@@ -120,7 +139,7 @@ public class AccesoLDAP {
         String dn="uid="+usuario+","+baseBusqueda;
         try {
             
-            conLdap=new LDAPConnection();
+            LDAPConnection conLdap=new LDAPConnection();
             conLdap.bind(LDAPConnection.LDAP_V3, dn, password.getBytes("UTF8"));
             LDAPAttribute atributo=new LDAPAttribute("userPassword",password);
             passOK=conLdap.compare(dn, atributo);
