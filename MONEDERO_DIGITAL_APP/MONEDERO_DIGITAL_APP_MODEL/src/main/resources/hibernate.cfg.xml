@@ -10,5 +10,8 @@
     <mapping  class="ud.ing.modi.entidades.Persona"/>
     <mapping  class="ud.ing.modi.entidades.TipoDocumento"/>
     <mapping  class="ud.ing.modi.entidades.PendienteRegis"/>
+    <mapping  class="ud.ing.modi.entidades.Cliente"/>
+    <mapping  class="ud.ing.modi.entidades.ClienteJuridico"/>
+    <mapping  class="ud.ing.modi.entidades.EstadoCliente"/>
   </session-factory>
 </hibernate-configuration>
