@@ -21,7 +21,7 @@ import javax.persistence.Table;
 
 @Entity
 @Table(name="PERSONA")
-public class Persona implements Serializable {
+public class Persona implements Serializable{
     @Id
     @SequenceGenerator( name = "PERSONA_SEQ", sequenceName = "PERSONA_SEQ", allocationSize = 1, initialValue = 1 )
     @GeneratedValue(strategy=SEQUENCE, generator ="PERSONA_SEQ")

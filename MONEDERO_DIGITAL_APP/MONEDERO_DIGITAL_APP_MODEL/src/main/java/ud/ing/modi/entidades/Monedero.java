@@ -8,65 +8,102 @@ package ud.ing.modi.entidades;
 
 import java.io.Serializable;
 import java.util.Date;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.Table;
+import javax.persistence.Temporal;
 
 
 /**
  *
  * @author user
  */
+@Entity
+@Table(name="MONEDERO")
 public class Monedero implements Serializable{
     //OJO: este antes no era serializable, lo puse para poder utilizar la clase al crear un nuevo monedero
-    public String divisa;
-    public String saldo;
-    public String fecha;
-    public String codigo;
+    @Id
+    @Column (name="COD_MONEDERO")
+    private String codMonedero;
+    //@Column (name="COD_DIVISA")
+    @ManyToOne (fetch = FetchType.EAGER)
+    @JoinColumn (name="COD_DIVISA")
+    private Divisa divisa;
+    @Column (name="FECHA_CREACION")
+    @Temporal(javax.persistence.TemporalType.DATE)
+    private Date fechaCreacion;
+    @Column (name="SALDO")
+    private float saldo;
+    @Column (name="COD_ESTADO")
+    private int codEstado;//este debe cambiar para apuntar al objeto Estado
+    @Column (name="COD_CLIENTE_DUENO")
+    private int codCliente;//este debe cambiar para apuntar al objeto cliente
 
-    public Monedero(String divisa, String saldo) {
+    public Monedero() {
+        divisa=new Divisa();
+    }
+
+    public Monedero(String codMonedero, Divisa divisa, Date fechaCreacion, float saldo, int codEstado, int codCliente) {
+        this.codMonedero = codMonedero;
         this.divisa = divisa;
+        this.fechaCreacion = fechaCreacion;
         this.saldo = saldo;
-        this.fecha=(new Date()).toString();
-        this.codigo=Integer.toString((int)(Math.random()*10000));
-    }
-    
-    public void cargarMonedero(Monedero moned) {
-        this.divisa = moned.divisa;
-        this.saldo = moned.saldo;
-        this.fecha=moned.fecha;
-        this.codigo=moned.codigo;
-    }
-    
-    public Monedero(){
-        this.saldo="0";
-        this.fecha=(new Date()).toString();
-        this.codigo=Integer.toString((int)(Math.random()*10000));
+        this.codEstado = codEstado;
+        this.codCliente = codCliente;
     }
 
-    public String getDivisa() {
+    public String getCodMonedero() {
+        return codMonedero;
+    }
+
+    public void setCodMonedero(String codMonedero) {
+        this.codMonedero = codMonedero;
+    }
+
+    public Divisa getDivisa() {
         return divisa;
     }
 
-    public void setDivisa(String divisa) {
+    public void setDivisa(Divisa divisa) {
         this.divisa = divisa;
     }
 
-    public String getSaldo() {
+    public Date getFechaCreacion() {
+        return fechaCreacion;
+    }
+
+    public void setFechaCreacion(Date fechaCreacion) {
+        this.fechaCreacion = fechaCreacion;
+    }
+
+    public float getSaldo() {
         return saldo;
     }
 
-    public void setSaldo(String saldo) {
+    public void setSaldo(float saldo) {
         this.saldo = saldo;
     }
-    
-    public String getFecha() {
-        return fecha;
+
+    public int getCodEstado() {
+        return codEstado;
     }
 
-    public void setFecha(String fecha) {
-        this.fecha = fecha;
+    public void setCodEstado(int codEstado) {
+        this.codEstado = codEstado;
     }
+
+    public int getCodCliente() {
+        return codCliente;
+    }
+
+    public void setCodCliente(int codCliente) {
+        this.codCliente = codCliente;
+    }
+
     
-    public String getCodigo() {
-        return codigo;
-    }
     
 }
