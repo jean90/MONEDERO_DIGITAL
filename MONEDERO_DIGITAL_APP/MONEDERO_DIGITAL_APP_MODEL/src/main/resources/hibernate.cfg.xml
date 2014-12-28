@@ -4,7 +4,7 @@
   <session-factory>
     <property name="hibernate.dialect">org.hibernate.dialect.OracleDialect</property>
     <property name="hibernate.connection.driver_class">oracle.jdbc.OracleDriver</property>
-    <property name="hibernate.connection.url">jdbc:oracle:thin:@190.146.42.16:1521:XE</property>
+    <property name="hibernate.connection.url">jdbc:oracle:thin:@monedero-server:1521:XE</property>
     <property name="hibernate.connection.username">USER_MONEDERO</property>
     <property name="hibernate.connection.password">app123456</property>
     <mapping  class="ud.ing.modi.entidades.Persona"/>
@@ -15,5 +15,6 @@
     <mapping  class="ud.ing.modi.entidades.Cliente"/>
     <mapping  class="ud.ing.modi.entidades.ClienteJuridico"/>
     <mapping  class="ud.ing.modi.entidades.EstadoCliente"/>
+    <mapping  class="ud.ing.modi.entidades.ClienteNatural"/>
   </session-factory>
 </hibernate-configuration>
