@@ -9,6 +9,7 @@ package ud.ing.modi.controlador.inscripcion;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -19,7 +20,9 @@ import javax.faces.component.UIComponent;
 import javax.faces.context.FacesContext;
 import javax.faces.validator.ValidatorException;
 import org.primefaces.event.FlowEvent;
+import ud.ing.modi.config.Config;
 import ud.ing.modi.controlador.ControlPersona;
+import ud.ing.modi.email.EmailActivacionCuenta;
 import ud.ing.modi.entidades.PendienteRegis;
 import ud.ing.modi.entidades.Persona;
 import ud.ing.modi.entidades.TipoDocumento;
@@ -27,6 +30,7 @@ import ud.ing.modi.ldap.AccesoLDAP;
 import ud.ing.modi.mapper.DocumentoMapper;
 import ud.ing.modi.mapper.PendientesMapper;
 import ud.ing.modi.mapper.PersonMapper;
+import ud.ing.modi.utilidades.Cifrado;
 
 /**
  *
@@ -121,6 +125,7 @@ public class InscripcionPersona implements Serializable {
             registroLdap();
             FacesMessage msg = new FacesMessage("Successful", "Welcome :" + persona.getNombre());
             FacesContext.getCurrentInstance().addMessage(null, msg);
+            this.generarEmail();
         } catch (Exception ex) {
             Logger.getLogger(InscripcionPersona.class.getName()).log(Level.SEVERE, null, ex);
             FacesMessage msg = new FacesMessage("Error", "Ha ocurrido un error en su registro");
@@ -157,6 +162,23 @@ public class InscripcionPersona implements Serializable {
                 this.persona.setTipoDocumento(this.documentos.get(i));
             }
         }
+    }
+    
+    public void generarEmail(){
+        HashMap datos=new HashMap();
+        datos.put("nombre", "Luisa");
+        datos.put("apellido", "Rueda");
+        String codSolicit=Integer.toString(this.getPendiente().getCodSolicitud());
+        Cifrado cifra=new Cifrado();
+        cifra.addKey(Config.getConfig().getPropiedad("CLAVE_PRIVADA_MENSAJERIA"));
+        codSolicit=cifra.encriptar(codSolicit);
+        datos.put("url", Config.getConfig().getPropiedad("MONEDERO_URL")+"activar?id="+codSolicit);
+        EmailActivacionCuenta email= new EmailActivacionCuenta("luferupa@gmail.com");
+        email.ensamblarMensaje(datos);
+        email.enviarMensaje();
+        System.out.println("MENSAJE DESCIFRADO: "+cifra.desencriptar(codSolicit));
+        //String mensaje = ConstructorEmail.construirMensaje(datos,template);       
+       
     }
     
 }

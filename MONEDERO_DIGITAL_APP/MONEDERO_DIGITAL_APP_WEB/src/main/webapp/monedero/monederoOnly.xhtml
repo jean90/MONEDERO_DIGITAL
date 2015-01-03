@@ -5,7 +5,7 @@
                 xmlns:h="http://java.sun.com/jsf/html"
                 xmlns:f="http://java.sun.com/jsf/core" 
                 xmlns:p="http://primefaces.org/ui" 
-                xmlns:fn="http://java.sun.com/jsp/jslt/functions">
+                xmlns:fn="http://java.sun.com/jsp/jstl/functions">
     <style type="text/css">
         .monedItem {
             width:180px;
@@ -15,6 +15,15 @@
     </style>
     <f:view contentType="text/html">
         <h:head>
+            <script type="text/javascript">
+                var actual = 'faces/monedero/principal.xhtml';
+                function cambioPagina(pagina) {
+                if (pagina != actual) {
+                $('#frame').attr('src', pagina);
+                actual=pagina;
+                }
+                }
+            </script>
             <title>MONEDERO DIGITAL - Módulo Cliente Monedero</title>
         </h:head>
         <h:body>
@@ -35,7 +44,7 @@
                         <p:panelMenu style="width:250px; height:400px; font-size:13px">   
                                 <p:submenu label="Crear Monedero" >  
                                         
-                                       <p:menuitem value="Crear Monedero" icon="ui-icon-home" url="javascript:cambioPagina('faces/creacionMonedero.xhtml')" />  
+                                       <p:menuitem value="Crear Monedero" icon="ui-icon-home" url="javascript:cambioPagina('faces/monedero/creacionMonedero.xhtml')" />  
                                 </p:submenu>
 
                                 <p:submenu label="Gestionar Monederos" >  
@@ -65,14 +74,6 @@
                 </p:layout>
             </h:form>
         </h:body>
-        <script type="text/javascript">
-                var actual = 'faces/monedero/principal.xhtml';
-                function cambioPagina(pagina) {
-                if (pagina != actual) {
-                $('#frame').attr('src', pagina);
-                actual=pagina;
-                }
-                }
-            </script>
+        
     </f:view>
 </ui:composition>
