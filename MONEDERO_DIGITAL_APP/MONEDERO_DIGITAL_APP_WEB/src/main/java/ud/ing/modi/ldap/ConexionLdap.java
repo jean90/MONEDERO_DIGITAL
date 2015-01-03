@@ -82,12 +82,17 @@ public class ConexionLdap {
         String user=Config.getConfig().getPropiedad("LDAP_USER");
         String passWord=Config.getConfig().getPropiedad("LDAP_USER_PASSWORD");
         String login = "uid=" + user + ",ou=system";
-        try {
+        try {            
             this.lc = new LDAPConnection();
-            this.lc.connect(ldapHost, ldapPort);
-            System.out.println("====Conectado al Servidor LDAP====");
-            System.out.println("Autenticado en el servidor....");
-            this.lc.bind(LDAPConnection.LDAP_V3, login, passWord.getBytes("UTF8"));
+            if(this.lc.isConnectionAlive()){
+                System.out.println("conexion abierta");
+            }else{
+                System.out.println("conexion cerrada");            
+                this.lc.connect(ldapHost, ldapPort);
+                System.out.println("====Conectado al Servidor LDAP====");
+                System.out.println("Autenticado en el servidor....");
+                this.lc.bind(LDAPConnection.LDAP_V3, login, passWord.getBytes("UTF8"));
+            }
         } catch (UnsupportedEncodingException ex) {
             Logger.getLogger(ConexionLdap.class.getName()).log(Level.SEVERE, null, ex);
         } catch (LDAPException ex) {
@@ -97,7 +102,7 @@ public class ConexionLdap {
 	
     public void cerrarConexionLdap() {
         try {
-            this.lc.disconnect();
+            this.lc.disconnect();            
             System.out.println("Conexion Cerrada Correctamente...");
         } catch (LDAPException ex) {
             Logger.getLogger(ConexionLdap.class.getName()).log(Level.SEVERE, null, ex);
