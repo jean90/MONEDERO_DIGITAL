@@ -43,5 +43,17 @@ public class PendientesMapper {
         }
     }
     
+    public boolean buscarSolicitud(String codSolic) throws HibernateException {
+        int codSol = Integer.parseInt(codSolic); 
+        PendienteRegis pendiente = null;
+        try {
+            iniciaOperacion();
+            pendiente = (PendienteRegis) sesion.get(PendienteRegis.class, codSol);
+            return pendiente!=null;
+        } finally {
+            sesion.close();
+        }
+    }
+    
 }
 

@@ -14,6 +14,7 @@ import javax.persistence.FetchType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 
@@ -40,20 +41,25 @@ public class Monedero implements Serializable{
     private float saldo;
     @Column (name="COD_ESTADO")
     private int codEstado;//este debe cambiar para apuntar al objeto Estado
-    @Column (name="COD_CLIENTE_DUENO")
-    private int codCliente;//este debe cambiar para apuntar al objeto cliente
+    //@Column (name="COD_CLIENTE_DUENO")
+    //private int codCliente;//este debe cambiar para apuntar al objeto cliente
+    @OneToOne (fetch = FetchType.EAGER)
+    @JoinColumn (name="COD_CLIENTE_DUENO")
+    private ClienteNatural clienteDueno;
 
     public Monedero() {
         divisa=new Divisa();
+        clienteDueno=new ClienteNatural();
     }
 
-    public Monedero(String codMonedero, Divisa divisa, Date fechaCreacion, float saldo, int codEstado, int codCliente) {
+    public Monedero(String codMonedero, Divisa divisa, Date fechaCreacion, float saldo, int codEstado, ClienteNatural clienteDueno) {
         this.codMonedero = codMonedero;
         this.divisa = divisa;
         this.fechaCreacion = fechaCreacion;
         this.saldo = saldo;
         this.codEstado = codEstado;
-        this.codCliente = codCliente;
+        //this.codCliente = codCliente;
+        this.clienteDueno=clienteDueno;
     }
 
     public String getCodMonedero() {
@@ -96,12 +102,18 @@ public class Monedero implements Serializable{
         this.codEstado = codEstado;
     }
 
-    public int getCodCliente() {
-        return codCliente;
+    /* public int getCodCliente() {
+    return codCliente;
+    }
+    public void setCodCliente(int codCliente) {
+    this.codCliente = codCliente;
+    }*/
+    public ClienteNatural getClienteDueno() {
+        return clienteDueno;
     }
 
-    public void setCodCliente(int codCliente) {
-        this.codCliente = codCliente;
+    public void setClienteDueno(ClienteNatural clienteDueno) {
+        this.clienteDueno = clienteDueno;
     }
 
     
