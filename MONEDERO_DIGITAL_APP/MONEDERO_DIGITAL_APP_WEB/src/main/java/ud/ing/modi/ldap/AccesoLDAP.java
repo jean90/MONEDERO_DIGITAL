@@ -5,7 +5,7 @@ package ud.ing.modi.ldap;
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-import com.novell.ldap.LDAPAttribute;
+import com.novell.ldap.*;
 import com.novell.ldap.LDAPAttributeSet;
 import com.novell.ldap.LDAPConnection;
 import com.novell.ldap.LDAPEntry;
@@ -52,17 +52,18 @@ public class AccesoLDAP {
 
     private LDAPEntry cargarDatos(Persona persona, String uid, String password) {
         LDAPAttributeSet setAtr = new LDAPAttributeSet();
+        setAtr.add(new LDAPAttribute("objectclass", "PersonMonederoDigital"));
         setAtr.add(new LDAPAttribute("objectclass", "inetOrgPerson"));
         setAtr.add(new LDAPAttribute("objectclass", "organizationalPerson"));
         setAtr.add(new LDAPAttribute("objectclass", "person"));
-        setAtr.add(new LDAPAttribute("objectclass", "PersonMonederoDigital"));
         setAtr.add(new LDAPAttribute("objectclass", "top"));
         setAtr.add(new LDAPAttribute("cn", persona.getNombre()));
-        setAtr.add(new LDAPAttribute("sn", persona.getApellido()));
-        setAtr.add(new LDAPAttribute("givenName", persona.getNombre()));
         setAtr.add(new LDAPAttribute("estadoCuenta", AccesoLDAP.CUENTA_PENDIENTE_ACTIVACION));
         setAtr.add(new LDAPAttribute("intentosConexion", "0"));
+        setAtr.add(new LDAPAttribute("sn", persona.getApellido()));
+        setAtr.add(new LDAPAttribute("givenName", persona.getNombre()));
         setAtr.add(new LDAPAttribute("userPassword", password));
+        
         String dn = "uid=" + uid + ",ou=Users,dc=monederodigital,dc=com,dc=co";
         LDAPEntry entrada = new LDAPEntry(dn, setAtr);
         return entrada;
