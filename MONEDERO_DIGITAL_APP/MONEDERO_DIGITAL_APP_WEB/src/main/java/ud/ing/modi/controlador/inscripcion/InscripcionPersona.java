@@ -110,6 +110,9 @@ public class InscripcionPersona implements Serializable {
       }
     }
     
+    /**
+     * Este método se encarga de guardar el registro en la base de datos de la entidad persona, así como de la solicitud de registro. De la misma forma se almacena el registro en el LDAP del nuevo usuario.
+     */
     public void save() {
         /*if(this.tipoDocumento.getCodigotipoDocumento()=="1"){
          this.tipoDocumento.setDesDocumento(null);
@@ -121,6 +124,7 @@ public class InscripcionPersona implements Serializable {
             mapeador.guardarPersona(this.persona);
             this.pendiente.setIdPersona(this.persona.getIdPersona());
             this.pendiente.setFechaSolic(new Date());
+            this.pendiente.setNickname(nick);
             mapPend.guardarPendiente(this.pendiente);
             registroLdap();
             FacesMessage msg = new FacesMessage("Successful", "Welcome :" + persona.getNombre());
@@ -166,14 +170,14 @@ public class InscripcionPersona implements Serializable {
     
     public void generarEmail(){
         HashMap datos=new HashMap();
-        datos.put("nombre", "Luisa");
-        datos.put("apellido", "Rueda");
+        datos.put("nombre", this.persona.getNombre());
+        datos.put("apellido", this.persona.getApellido());
         String codSolicit=Integer.toString(this.getPendiente().getCodSolicitud());
         Cifrado cifra=new Cifrado();
         cifra.addKey(Config.getConfig().getPropiedad("CLAVE_PRIVADA_MENSAJERIA"));
         codSolicit=cifra.encriptar(codSolicit);
         datos.put("url", Config.getConfig().getPropiedad("MONEDERO_URL")+"activar?id="+codSolicit);
-        EmailActivacionCuenta email= new EmailActivacionCuenta("luferupa@gmail.com");
+        EmailActivacionCuenta email= new EmailActivacionCuenta(this.persona.getEmail());
         email.ensamblarMensaje(datos);
         email.enviarMensaje();
         System.out.println("MENSAJE DESCIFRADO: "+cifra.desencriptar(codSolicit));

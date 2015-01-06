@@ -43,13 +43,61 @@ public class PendientesMapper {
         }
     }
     
-    public boolean buscarSolicitud(String codSolic) throws HibernateException {
+    /**
+     * Este método busca en la BD en la tabla PENDIENTE_REGIS si es número de la solicitud existe
+     * @param codSolic Es el código de la solicitud relacionado en la tabla de pendientes
+     * @return Se retorna el nickname de la persona que realizó la solicitud de creación de cuenta
+     * @throws HibernateException 
+     */
+    public String buscarSolicitud(String codSolic) throws HibernateException {//Se modificó, antes retornaba boolean asociado a return pendiente!=null;
+        int codSol = Integer.parseInt(codSolic); 
+        String nick=null;
+        PendienteRegis pendiente = null;
+        try {
+            iniciaOperacion();
+            pendiente = (PendienteRegis) sesion.get(PendienteRegis.class, codSol);
+            nick = pendiente.getNickname();
+            //return pendiente!=null;
+        } finally {
+            sesion.close();
+        }
+        return nick;
+    }
+    
+    /**
+     * Este método carga el registro pendiente de activación
+     * @param codSolic Es el código de la solicitud por el cual se filtra la búsqueda
+     * @return Retorna el objeto cargado pendiente de registro
+     * @throws HibernateException 
+     */
+    public PendienteRegis cargarPendiente(String codSolic) throws HibernateException {
         int codSol = Integer.parseInt(codSolic); 
         PendienteRegis pendiente = null;
         try {
             iniciaOperacion();
             pendiente = (PendienteRegis) sesion.get(PendienteRegis.class, codSol);
-            return pendiente!=null;
+        } finally {
+            sesion.close();
+        }
+        return pendiente;
+    }
+    
+    /**
+     * Este método borra el registro de la solicitud pendiente de la base de datos
+     * @param pendiente Es el código de la solicitud a borrar de la base de datos
+     */
+    public void borrarPendiente(String codPendiente) throws Exception{
+        try {
+            PendienteRegis pendiente=this.cargarPendiente(codPendiente);
+            iniciaOperacion();
+            System.out.println("Eliminando de Pendientes..");
+            sesion.delete(pendiente);
+            tx.commit();
+        } catch (Exception e) {
+            if (tx != null) {
+                tx.rollback();
+            }
+            throw e;
         } finally {
             sesion.close();
         }

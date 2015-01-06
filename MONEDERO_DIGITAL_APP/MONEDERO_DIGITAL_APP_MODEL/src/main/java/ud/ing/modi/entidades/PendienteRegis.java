@@ -24,6 +24,8 @@ public class PendienteRegis implements Serializable{
     @Column(name="FECHA_SOLIC")
     @Temporal(javax.persistence.TemporalType.DATE)
     private Date fechaSolic;
+    @Column(name="NICKNAME")    
+    private String nickname;
 
     public PendienteRegis() {
     }
@@ -51,5 +53,15 @@ public class PendienteRegis implements Serializable{
     public void setFechaSolic(Date fechaSolic) {
         this.fechaSolic = fechaSolic;
     }
+
+    public String getNickname() {
+        return nickname;
+    }
+
+    public void setNickname(String nickname) {
+        this.nickname = nickname;
+    }
+    
+    
     
 }

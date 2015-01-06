@@ -57,6 +57,11 @@ public class MonederoLogIn {
         this.password = password;
     }
 
+    /**
+     * Este método realiza las validaciones necesarias para que un usuario se pueda loggear.
+     * @return Se retorna como resultado el rol asociado al usuario validado.
+     * @throws ServletException 
+     */
     public String login() throws ServletException {
         String rol = "error";
         FacesContext contexto = FacesContext.getCurrentInstance();
@@ -65,6 +70,7 @@ public class MonederoLogIn {
         try {
             if (validarEstadoCuenta(userName)) {
                 request.login(userName, password);
+                inicializarIntentosConexion(userName);
                 if (request.isUserInRole("Admin")) {
                     rol = "Admin";
                 } else if (request.isUserInRole("Monedero")) {
@@ -80,7 +86,7 @@ public class MonederoLogIn {
                 /*if (!ldap.validarPassword(userName, password)) {
                 }*/
                 FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Contraseña Incorrecta", "Verifique sus datos"));
-                validarNoIntentosConexion(userName);
+                validarBloqueoCuenta(userName);
             } else {
                 FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Usuario No Existe!", "Verifique sus datos"));
             }
@@ -151,7 +157,7 @@ public class MonederoLogIn {
         return estadoCuentaActivo;
     }
 
-    private void validarNoIntentosConexion(String usuario) {
+    private void validarBloqueoCuenta(String usuario) {
         int numIntentosConexion;
         AccesoLDAP ldap = new AccesoLDAP();
         numIntentosConexion = Integer.parseInt(ldap.getNumIntentosConexion(usuario));
@@ -168,8 +174,6 @@ public class MonederoLogIn {
     private void inicializarIntentosConexion(String usuario) {
         int numIntentosConexion = 0;
         AccesoLDAP ldap = new AccesoLDAP();
-        numIntentosConexion = Integer.parseInt(ldap.getNumIntentosConexion(usuario));
-        numIntentosConexion++;
         ldap.modificarIntentosConexion(usuario, Integer.toString(numIntentosConexion));
     }
 }
