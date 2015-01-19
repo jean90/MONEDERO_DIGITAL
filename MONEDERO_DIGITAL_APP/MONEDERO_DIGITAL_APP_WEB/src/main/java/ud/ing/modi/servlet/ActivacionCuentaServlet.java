@@ -6,13 +6,20 @@
 package ud.ing.modi.servlet;
 
 import java.io.IOException;
+import java.util.Date;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import ud.ing.modi.config.Config;
+import ud.ing.modi.entidades.ClienteNatural;
+import ud.ing.modi.entidades.EstadoCliente;
+import ud.ing.modi.entidades.PendienteRegis;
+import ud.ing.modi.entidades.Persona;
 import ud.ing.modi.ldap.AccesoLDAP;
+import ud.ing.modi.mapper.ClienteMapper;
 import ud.ing.modi.mapper.PendientesMapper;
+import ud.ing.modi.mapper.PersonMapper;
 import ud.ing.modi.utilidades.Cifrado;
 
 /**
@@ -39,21 +46,29 @@ public class ActivacionCuentaServlet extends HttpServlet {
         try{//Puse el try catch porque si el registro en BD no tenía nick botaba error en código de la página, más no direccionaba a página de ErrorLogin
             System.out.println("ID ANTES DE: "+req.getParameter("id"));
             String id=req.getParameter("id");
-            PendientesMapper mapeador=new PendientesMapper();
+            PendientesMapper mapeadorPend=new PendientesMapper();
+            ClienteMapper mapeadorClien=new ClienteMapper();
+            PersonMapper mapeadorPers=new PersonMapper();
+            ClienteNatural cliente=new ClienteNatural();
             Cifrado cifra=new Cifrado();
             cifra.addKey(Config.getConfig().getPropiedad("CLAVE_PRIVADA_MENSAJERIA"));
             System.out.println("CLAVE PRIVADA: "+Config.getConfig().getPropiedad("CLAVE_PRIVADA_MENSAJERIA"));
             id=cifra.desencriptar(id);
             System.out.println("ID DESPUÉS DE: "+id);
-            System.out.println("ENCONTRADO: "+mapeador.buscarSolicitud(id));
+            System.out.println("ENCONTRADO: "+mapeadorPend.buscarSolicitud(id));
             AccesoLDAP ldap=new AccesoLDAP();
             
-            String nick=mapeador.buscarSolicitud(id);
-            System.out.println("ESTADOOOOOOO "+ldap.getEstadoCuenta(nick));
-            if (nick!=null&&ldap.getEstadoCuenta(nick).equals(AccesoLDAP.CUENTA_PENDIENTE_ACTIVACION)) {//Se puso tmbn la validación de si el estado actual es pendiente de activación. Si no, va a la pantalla de error.
+            PendienteRegis pendiente=mapeadorPend.buscarSolicitud(id);
+            System.out.println("ESTADOOOOOOO "+ldap.getEstadoCuenta(pendiente.getNickname()));
+            if (pendiente!=null&&ldap.getEstadoCuenta(pendiente.getNickname()).equals(AccesoLDAP.CUENTA_PENDIENTE_ACTIVACION)) {//Se puso tmbn la validación de si el estado actual es pendiente de activación. Si no, va a la pantalla de error.
                 System.out.println("ACTIVANDO CUENTA ...");
-                ldap.modificarEstadoCuenta(nick, AccesoLDAP.CUENTA_ACTIVA);
-                mapeador.borrarPendiente(id);
+                //Se activa la cuenta
+                ldap.modificarEstadoCuenta(pendiente.getNickname(), AccesoLDAP.CUENTA_ACTIVA);
+                //A continuación se borra de la tabla de pendientes
+                mapeadorPend.borrarPendiente(id);
+                Persona persona=mapeadorPers.obtenerUsuario(Integer.toString(pendiente.getIdPersona()));
+                cliente=new ClienteNatural(persona, new Date(), new EstadoCliente(1, "ACTIVO"));
+                mapeadorClien.guardarClienteNatural(cliente);
                 System.out.println("CUENTA ACTIVADA!");
                 res.sendRedirect(req.getContextPath());
             }else{

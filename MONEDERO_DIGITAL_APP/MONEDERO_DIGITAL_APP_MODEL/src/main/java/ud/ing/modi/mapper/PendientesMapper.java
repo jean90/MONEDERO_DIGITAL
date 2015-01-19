@@ -44,24 +44,24 @@ public class PendientesMapper {
     }
     
     /**
-     * Este método busca en la BD en la tabla PENDIENTE_REGIS si es número de la solicitud existe
+     * Este método busca en la BD en la tabla PENDIENTE_REGIS si el número de la solicitud existe
      * @param codSolic Es el código de la solicitud relacionado en la tabla de pendientes
-     * @return Se retorna el nickname de la persona que realizó la solicitud de creación de cuenta
+     * @return Se retorna el objeto de la solicitud pendiente
      * @throws HibernateException 
      */
-    public String buscarSolicitud(String codSolic) throws HibernateException {//Se modificó, antes retornaba boolean asociado a return pendiente!=null;
+    public PendienteRegis buscarSolicitud(String codSolic) throws HibernateException {//Se modificó, antes retornaba boolean asociado a return pendiente!=null;
         int codSol = Integer.parseInt(codSolic); 
-        String nick=null;
+        //String nick=null;
         PendienteRegis pendiente = null;
         try {
             iniciaOperacion();
             pendiente = (PendienteRegis) sesion.get(PendienteRegis.class, codSol);
-            nick = pendiente.getNickname();
+            //nick = pendiente.getNickname();
             //return pendiente!=null;
         } finally {
             sesion.close();
         }
-        return nick;
+        return pendiente;
     }
     
     /**

@@ -51,6 +51,12 @@ public class Cliente implements Serializable {
         this.estadoCliente = estadoCliente;
     }
 
+    public Cliente(Date fechaAlta, EstadoCliente estadoCliente) {
+        this.idCliente = idCliente;
+        this.fechaAlta = fechaAlta;
+        this.estadoCliente = estadoCliente;
+    }
+    
     public int getIdCliente() {
         return idCliente;
     }

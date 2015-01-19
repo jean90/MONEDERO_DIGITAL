@@ -13,6 +13,7 @@ import org.hibernate.Transaction;
 import org.hibernate.cfg.AnnotationConfiguration;
 import ud.ing.modi.entidades.Cliente;
 import ud.ing.modi.entidades.ClienteJuridico;
+import ud.ing.modi.entidades.ClienteNatural;
 import ud.ing.modi.entidades.Persona;
 
 /**
@@ -80,4 +81,20 @@ public class ClienteMapper {
             sesion.close();
         }
     }
+    
+    public void guardarClienteNatural(ClienteNatural cNatural) throws Exception{
+        try {
+            iniciaOperacion();
+            sesion.save(cNatural);
+            tx.commit();
+        } catch (Exception e) {
+            if (tx != null) {
+                tx.rollback();
+            }
+            throw e;
+        } finally {
+            sesion.close();
+        }
+    }
+    
 }

@@ -35,6 +35,11 @@ public class ClienteNatural extends Cliente implements Serializable {
         super(idCliente, fechaAlta, estadoCliente);
         this.persona = persona;
     }
+    
+    public ClienteNatural(Persona persona, Date fechaAlta, EstadoCliente estadoCliente) {
+        super(fechaAlta, estadoCliente);
+        this.persona = persona;
+    }
 
     public Persona getPersona() {
         return persona;
