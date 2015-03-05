@@ -4,7 +4,7 @@
     <provider>org.hibernate.ejb.HibernatePersistence</provider>
     <properties>
       <property name="javax.persistence.jdbc.url" value="jdbc:oracle:thin:@monedero-server:1521:XE"/>
-      <property name="javax.persistence.jdbc.password" value="app123456"/>
+      <property name="javax.persistence.jdbc.password" value="qwerty03"/>
       <property name="javax.persistence.jdbc.driver" value="oracle.jdbc.OracleDriver"/>
       <property name="javax.persistence.jdbc.user" value="USER_MONEDERO"/>
       <property name="hibernate.cache.provider_class" value="org.hibernate.cache.NoCacheProvider"/>

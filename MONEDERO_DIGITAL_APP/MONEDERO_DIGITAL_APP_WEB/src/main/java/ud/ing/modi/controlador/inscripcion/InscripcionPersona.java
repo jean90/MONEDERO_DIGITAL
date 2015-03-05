@@ -9,7 +9,7 @@ package ud.ing.modi.controlador.inscripcion;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.HashMap;
+import java.util.HashMap;   
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -17,8 +17,11 @@ import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
 import javax.faces.component.UIComponent;
+import javax.faces.context.ExternalContext;
 import javax.faces.context.FacesContext;
 import javax.faces.validator.ValidatorException;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import org.primefaces.event.FlowEvent;
 import ud.ing.modi.config.Config;
 import ud.ing.modi.controlador.ControlPersona;
@@ -102,7 +105,14 @@ public class InscripcionPersona implements Serializable {
         return evento;
     }
     
-    public void valida(FacesContext arg0, UIComponent arg1, Object arg2) throws ValidatorException {
+    /**
+     * Este método validaUsuLdap que el nick que el usuario ha elegido para su registro no existe actualmente en el ldap
+     * @param arg0
+     * @param arg1
+     * @param arg2
+     * @throws ValidatorException 
+     */
+    public void validaUsuLdap(FacesContext arg0, UIComponent arg1, Object arg2) throws ValidatorException {
         AccesoLDAP ldap=new AccesoLDAP();
         System.out.println("Buscando usuario "+arg2.toString()+" en el ldap");
         if (ldap.buscarUsuario((String)arg2)) {
@@ -111,12 +121,28 @@ public class InscripcionPersona implements Serializable {
     }
     
     /**
+     * Este método llama la validación de email
+     * @param arg0
+     * @param arg1
+     * @param arg2
+     * @throws ValidatorException 
+     */
+    public void validaEmail(FacesContext arg0, UIComponent arg1, Object arg2) throws ValidatorException {
+        System.out.println("Validando email "+arg2.toString());
+        EmailActivacionCuenta emailVal=new EmailActivacionCuenta(arg2.toString());
+      if (!emailVal.validarEmail()) {
+         throw new ValidatorException(new FacesMessage("Email no es válido"));
+      }
+    }
+    
+    /**
      * Este método se encarga de guardar el registro en la base de datos de la entidad persona, así como de la solicitud de registro. De la misma forma se almacena el registro en el LDAP del nuevo usuario.
      */
-    public void save() {
+    public String save() {
         /*if(this.tipoDocumento.getCodigotipoDocumento()=="1"){
          this.tipoDocumento.setDesDocumento(null);
          }*/
+        String estado="fallo";
         PersonMapper mapeador = new PersonMapper();
         PendientesMapper mapPend = new PendientesMapper();
         System.out.println("NICK: "+nick+"; PSS: "+password);
@@ -127,15 +153,25 @@ public class InscripcionPersona implements Serializable {
             this.pendiente.setNickname(nick);
             mapPend.guardarPendiente(this.pendiente);
             registroLdap();
-            FacesMessage msg = new FacesMessage("Successful", "Welcome :" + persona.getNombre());
-            FacesContext.getCurrentInstance().addMessage(null, msg);
+            /*FacesMessage msg = new FacesMessage("Registro exitoso", persona.getNombre()+", por favor confirma tu registro accediendo a la URL que hemos enviado a tu email");
+            FacesContext.getCurrentInstance().addMessage(null, msg);*///Se modificó por lo que está después de generarEmail
             this.generarEmail();
+            /*FacesContext contexto = FacesContext.getCurrentInstance();
+            ExternalContext contextoExterno = contexto.getExternalContext();
+            HttpServletRequest request = (HttpServletRequest) contextoExterno.getRequest();
+            HttpServletResponse response = (HttpServletResponse) contextoExterno.getResponse();
+            System.out.println("PATH "+request.getContextPath());
+            response.sendRedirect(request.getContextPath()+"/faces/Login/LogIn.xhtml?caso=inscrito");*/
+            //Si todo lo hace bien:
+            estado="inscrito";
         } catch (Exception ex) {
+            
             Logger.getLogger(InscripcionPersona.class.getName()).log(Level.SEVERE, null, ex);
             FacesMessage msg = new FacesMessage("Error", "Ha ocurrido un error en su registro");
             FacesContext.getCurrentInstance().addMessage(null, msg);
         }
         
+        return estado;
         
     }
     

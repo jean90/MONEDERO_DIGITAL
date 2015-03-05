@@ -6,6 +6,7 @@
 package ud.ing.modi.servlet;
 
 import java.io.IOException;
+import java.io.PrintWriter;
 import java.util.Date;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -55,24 +56,27 @@ public class ActivacionCuentaServlet extends HttpServlet {
             System.out.println("CLAVE PRIVADA: "+Config.getConfig().getPropiedad("CLAVE_PRIVADA_MENSAJERIA"));
             id=cifra.desencriptar(id);
             System.out.println("ID DESPUÉS DE: "+id);
-            System.out.println("ENCONTRADO: "+mapeadorPend.buscarSolicitud(id));
+            //System.out.println("ENCONTRADO: "+mapeadorPend.buscarSolicitud(id));
             AccesoLDAP ldap=new AccesoLDAP();
             
             PendienteRegis pendiente=mapeadorPend.buscarSolicitud(id);
-            System.out.println("ESTADOOOOOOO "+ldap.getEstadoCuenta(pendiente.getNickname()));
+            //System.out.println("ESTADOOOOOOO "+ldap.getEstadoCuenta(pendiente.getNickname()));
             if (pendiente!=null&&ldap.getEstadoCuenta(pendiente.getNickname()).equals(AccesoLDAP.CUENTA_PENDIENTE_ACTIVACION)) {//Se puso tmbn la validación de si el estado actual es pendiente de activación. Si no, va a la pantalla de error.
                 System.out.println("ACTIVANDO CUENTA ...");
                 //Se activa la cuenta
                 ldap.modificarEstadoCuenta(pendiente.getNickname(), AccesoLDAP.CUENTA_ACTIVA);
                 //A continuación se borra de la tabla de pendientes
                 mapeadorPend.borrarPendiente(id);
+                //Posterior se agrega a la tabla de Cliente y ClienteNatural
                 Persona persona=mapeadorPers.obtenerUsuario(Integer.toString(pendiente.getIdPersona()));
                 cliente=new ClienteNatural(persona, new Date(), new EstadoCliente(2, "ACTIVO"));
                 mapeadorClien.guardarClienteNatural(cliente);
                 System.out.println("CUENTA ACTIVADA!");
-                res.sendRedirect(req.getContextPath());
+                res.sendRedirect(req.getContextPath()+"?caso=activar");
             }else{
-                res.sendRedirect(req.getContextPath()+"/faces/LogIn/ErrorLogIn.xhtml");//Esta página se va a cambiar
+                System.out.println("PATH ACTIVA "+req.getContextPath());
+                res.sendRedirect(req.getContextPath()+"?caso=obsoleto");
+                //res.sendRedirect(req.getContextPath()+"/faces/LogIn/linkObsolError.xhtml");//Esta página se va a cambiar
             }
             
          }catch(Exception e){
@@ -81,5 +85,6 @@ public class ActivacionCuentaServlet extends HttpServlet {
          }   
             
     }
+    
 
 }

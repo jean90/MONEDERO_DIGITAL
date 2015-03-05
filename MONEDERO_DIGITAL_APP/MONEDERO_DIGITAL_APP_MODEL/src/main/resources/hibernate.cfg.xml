@@ -6,15 +6,15 @@
     <property name="hibernate.connection.driver_class">oracle.jdbc.OracleDriver</property>
     <property name="hibernate.connection.url">jdbc:oracle:thin:@monedero-server:1521:XE</property>
     <property name="hibernate.connection.username">USER_MONEDERO</property>
-    <property name="hibernate.connection.password">app123456</property>
-    <mapping  class="ud.ing.modi.entidades.Persona"/>
-    <mapping  class="ud.ing.modi.entidades.TipoDocumento"/>
-    <mapping  class="ud.ing.modi.entidades.PendienteRegis"/>
-    <mapping  class="ud.ing.modi.entidades.Divisa"/>
-    <mapping  class="ud.ing.modi.entidades.Monedero"/>
-    <mapping  class="ud.ing.modi.entidades.Cliente"/>
-    <mapping  class="ud.ing.modi.entidades.ClienteJuridico"/>
-    <mapping  class="ud.ing.modi.entidades.EstadoCliente"/>
-    <mapping  class="ud.ing.modi.entidades.ClienteNatural"/>
+    <property name="hibernate.connection.password">qwerty03</property>
+    <mapping class="ud.ing.modi.entidades.Persona"/>
+    <mapping class="ud.ing.modi.entidades.TipoDocumento"/>
+    <mapping class="ud.ing.modi.entidades.PendienteRegis"/>
+    <mapping class="ud.ing.modi.entidades.Divisa"/>
+    <mapping class="ud.ing.modi.entidades.Monedero"/>
+    <mapping class="ud.ing.modi.entidades.Cliente"/>
+    <mapping class="ud.ing.modi.entidades.ClienteJuridico"/>
+    <mapping class="ud.ing.modi.entidades.EstadoCliente"/>
+    <mapping class="ud.ing.modi.entidades.ClienteNatural"/>
   </session-factory>
 </hibernate-configuration>

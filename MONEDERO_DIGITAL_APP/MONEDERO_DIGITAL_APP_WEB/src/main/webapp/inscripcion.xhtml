@@ -26,7 +26,8 @@
 
 
                                 <h:outputText value="Tipo de documento:"/>                                    
-                                <h:selectOneMenu id="tipoDoc"  required="true" label="Tipo de documento" value="#{inscripcionPersona.persona.tipoDocumento.codigotipoDocumento}">
+                                <h:selectOneMenu id="tipoDoc"  required="true" label="Tipo de documento" value="#{inscripcionPersona.persona.tipoDocumento.codigotipoDocumento}" converterMessage="Debe seleccionar un tipo de documento">
+                                    <f:selectItem itemLabel="-- Selecciona una opción --" itemValue="null"/> 
                                     <f:selectItems value="#{inscripcionPersona.documentos}" var="doc" itemLabel="#{doc.desDocumento}" itemValue="#{doc.codigotipoDocumento}"/> 
                                     
                                 </h:selectOneMenu>
@@ -55,7 +56,7 @@
                                 <p:inputText value="#{inscripcionPersona.persona.direccion}" required="true" label="Direccion" />
                                 
                                 <h:outputText value="E-mail:"/>
-                                <p:inputText value="#{inscripcionPersona.persona.email}" required="true" label="Email" />
+                                <p:inputText value="#{inscripcionPersona.persona.email}" required="true" label="Email" validator="#{inscripcionPersona.validaEmail}"/>
                                 
                             </h:panelGrid>
                         </p:panel>                            
@@ -66,7 +67,7 @@
                             <h:panelGrid columns="2" columnClasses="label, value" >
 
                                 <h:outputText value="NickName"/>
-                                <p:inputText id="nick" value="#{inscripcionPersona.nick}" required="true" label="NickName" validator="#{inscripcionPersona.valida}"/>
+                                <p:inputText id="nick" value="#{inscripcionPersona.nick}" required="true" label="NickName" validator="#{inscripcionPersona.validaUsuLdap}"/>
                                 
                                 <h:outputLabel for="pwd1" value="Password: "/>
                                 <p:password autocomplete="false" id="pwd1" value="#{inscripcionPersona.password}" match="pwd2" label="password1" required="true" />
@@ -127,7 +128,7 @@
                             <h:outputText />
                             <h:outputText />
                             
-                            <p:commandButton value="Submit" actionListener="#{inscripcionPersona.save}" update="growl" process="@this"/>
+                            <p:commandButton value="Submit" action="#{inscripcionPersona.save()}" update="growl" process="@this"/>
                         </p:panel>
                         </p:tab>
                 </p:wizard>   

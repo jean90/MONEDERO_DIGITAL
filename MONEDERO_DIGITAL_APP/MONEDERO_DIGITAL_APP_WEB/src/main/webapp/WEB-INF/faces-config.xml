@@ -21,4 +21,18 @@
             <to-view-id>/LogIn/LogIn.xhtml</to-view-id>
         </navigation-case>
     </navigation-rule>
+    <navigation-rule>
+        <from-view-id>inscripcion.xhtml</from-view-id>
+        <navigation-case>
+            <from-action>#{inscripcionPersona.save()}</from-action>
+            <from-outcome>inscrito</from-outcome>
+            <to-view-id>/LogIn/LogIn.xhtml</to-view-id>
+            <redirect>
+                <view-param>
+                    <name>caso</name>
+                    <value>inscrito</value>
+                </view-param>
+            </redirect>
+        </navigation-case>
+    </navigation-rule>
 </faces-config>

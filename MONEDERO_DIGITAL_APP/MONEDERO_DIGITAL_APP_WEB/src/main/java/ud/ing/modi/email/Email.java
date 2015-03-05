@@ -7,6 +7,8 @@
 package ud.ing.modi.email;
 
 import java.util.HashMap;
+import javax.mail.internet.AddressException;
+import javax.mail.internet.InternetAddress;
 
 /**
  *
@@ -58,6 +60,21 @@ public abstract class Email {
     
     protected void ensamblarMensaje(){
         this.mensaje=ConstructorEmail.construirMensaje(this.getDatos(),this.template);
+    }
+    
+    /**
+     * Este método verifica que el correo electrónico sea válido
+     * @return Retorna verdadero si el email es válido, de lo contrario retorna falso
+     */
+    public boolean validarEmail(){
+        boolean result = true;
+       try {
+          InternetAddress emailAddr = new InternetAddress(this.destinatario);
+          emailAddr.validate();
+       } catch (AddressException ex) {
+          result = false;
+       }
+       return result;
     }
     
 }
