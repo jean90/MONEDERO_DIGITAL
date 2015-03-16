@@ -28,9 +28,9 @@ public class ClienteJuridico extends Cliente implements Serializable{
     private int nit;
     @Column(name="RAZON_SOCIAL")
     private String razonSocial;
-    @Column(name="DIRECCION")
+    @Column(name="DIRECCION_EMPRESA")
     private String direccion;
-    @Column(name="TELEFONO")
+    @Column(name="TELEFONO_EMPRESA")
     private String telefono;
     @OneToOne (fetch = FetchType.EAGER)
     @JoinColumn (name="ID_PERSONA_REPRESENTANTE")
